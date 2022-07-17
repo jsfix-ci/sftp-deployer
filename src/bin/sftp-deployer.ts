@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import chalk from 'chalk';
-import { program } from 'commander';
+import { Option, program } from 'commander';
 import fs from 'fs-extra';
 import ora from 'ora';
 import path from 'path';
@@ -22,9 +22,9 @@ program
     .name(pkg.name)
     .description(`${pkg.description}\n\n${description}`)
     .version(pkg.version)
-    .option('-c, --config <config file>', 'configuration file to use', DEFAULT_CONFIG_FILENAME)
+  .addOption(new Option('-c, --config <config file>', 'configuration file to use').preset(DEFAULT_CONFIG_FILENAME))
     .option('-h, --host <host>', 'hostname to connect to')
-    .option('-p, --port <port>', 'SSH port to use (defaults to 22)', x => Number.parseInt(x, 10))
+  .addOption(new Option('-p, --port <port>', 'SSH port to use (defaults to 22)').preset(x => Number.parseInt(x, 10)))
     .option('-u, --user <username>', 'the ssh username')
     .option('-k, --key <key_or_file>', 'path to private key file, or private key itself')
     .option('-l, --local <path>', 'directory to upload')
@@ -33,7 +33,7 @@ program
         '-s, --staging <staging_dir>',
         'staging directory on remote host (defaults to the target directory + .staging)'
     )
-    .option('-u, --upload <upload_dir>', 'upload directory on remote host', '/var/tmp')
+  .addOption(new Option('-u, --upload <upload_dir>', 'upload directory on remote host').preset('/var/tmp'))
     .parse(process.argv);
 
 const opts = program.opts() as Partial<CmdOptions>;
